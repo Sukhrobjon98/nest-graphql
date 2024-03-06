@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { PostModule } from './post/post.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PostModule } from './post/post.module';
+import { OwnerModule } from './owner/owner.module';
 
 @Module({
   imports: [
-    PostModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -20,8 +20,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      driver: ApolloDriver, // 
+      driver: ApolloDriver, 
     }),
+    PostModule,
+    OwnerModule,
   ],
 })
 export class AppModule {}

@@ -2,24 +2,44 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Owner {
+  id: Int!
+  name: String!
+  age: Float!
+  posts: [Post!]
+}
+
 type Post {
   id: Int!
   title: String!
   content: String!
-  type: String
+  owner: Owner!
+  ownerId: Int!
 }
 
 type Query {
   posts: [Post!]!
+  findOneOwner(id: Int!): Owner!
+  owners: [Owner!]!
 }
 
 type Mutation {
-  createPost(post: CreatePostInput!): Post!
-  deletePost(id: Int!): Post!
+  createPost(createPostInput: CreatePostInput!): Post!
+  createOwner(createOwnerInput: CreateOwnerInput!): Owner!
 }
 
 input CreatePostInput {
+  """The title of the post"""
   title: String!
+
+  """The content of the post"""
   content: String!
-  type: String!
+
+  """The author of the post"""
+  ownerId: Int!
+}
+
+input CreateOwnerInput {
+  name: String!
+  age: Int!
 }

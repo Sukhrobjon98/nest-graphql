@@ -1,27 +1,33 @@
-import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { PostService } from './post.service';
-import { Post } from './Models/post.entity';
-import { ParseIntPipe } from '@nestjs/common';
-import { CreatePostInput, deletePostInput } from './dto/create-post.input';
+import { Post } from './entities/post.entity';
+import { CreatePostInput } from './dto/create-post.input';
+import { Owner } from 'src/owner/entities/owner.entity';
 
-@Resolver((of) => Post)
+@Resolver(() => Post)
 export class PostResolver {
-  constructor(private postService: PostService) {}
+  constructor(private readonly postService: PostService) {}
 
-  @Query(() => [Post])
-  posts(): Promise<Post[]> {
-    console.log('Resolver');
+  @Mutation(() => Post)
+  createPost(@Args('createPostInput') createPostInput: CreatePostInput) {
+    return this.postService.create(createPostInput);
+  }
+
+  @Query(() => [Post], { name: 'posts' })
+  findAll() {
     return this.postService.findAll();
   }
 
-  @Mutation(() => Post)
-  createPost(@Args('post') post: CreatePostInput): Promise<Post> {
-    return this.postService.createPost(post);
-  }
-
-  @Mutation(() => Post)
-  async deletePost(@Args('id', { type: () => Int }) id: number): Promise<Post> {
-    console.log('Resolver', id);
-    return this.postService.deletePost(id);
+  @ResolveField(() => [Owner])
+  owner(@Parent() post: Post) {
+    return this.postService.owner(post);
   }
 }

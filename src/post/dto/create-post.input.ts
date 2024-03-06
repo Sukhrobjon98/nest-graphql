@@ -1,17 +1,13 @@
-import { Field, InputType, Int, Union, createUnionType } from '@nestjs/graphql';
+import { InputType, Int, Field } from '@nestjs/graphql';
 
 @InputType()
 export class CreatePostInput {
-  @Field()
+  @Field(() => String, { description: 'The title of the post' })
   title: string;
-  @Field()
-  content: string;
-  @Field()
-  type?: string;
-}
 
-@InputType()
-export class deletePostInput {
-  @Field((type) => Int)
-  id: number;
+  @Field(() => String, { description: 'The content of the post' })
+  content: string;
+
+  @Field(() => Int, { description: 'The author of the post' })
+  ownerId: number;
 }
