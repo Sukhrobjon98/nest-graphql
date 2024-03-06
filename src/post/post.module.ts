@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { PostService } from './post.service';
 import { PostResolver } from './post.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Post } from './Models/post.entity';
+import { Post } from './entities/post.entity';
+import { OwnerModule } from 'src/owner/owner.module';
 
 @Module({
-  providers: [PostService, PostResolver],
-  imports: [TypeOrmModule.forFeature([Post])]
+  providers: [PostResolver, PostService],
+  imports: [TypeOrmModule.forFeature([Post]),forwardRef(() => OwnerModule)],
+  exports: [PostService],
 })
 export class PostModule {}
